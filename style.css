@@ -274,7 +274,7 @@ h2:nth-child(2) {
   height: 70vh;
   width: 71vw;
   left: 28%; /*///////*/
-  background-image: url("/Assets/obys_bg_img_of\ video.webp"); /*/ //////*/
+  background-image: url("./Assets/obys_bg_img_of\ video.webp"); /*/ //////*/
   background-position: center; /*///////*/
   background-size: cover; /*/ //////*/
 }
@@ -1144,7 +1144,7 @@ h2:nth-child(2) {
     width: 100%;
     top: 0%;
     left: 0%;
-    background-image: url("/Assets/obys_bg_img_of\ video.webp"); /*///////*/
+    background-image: url("./Assets/obys_bg_img_of\ video.webp"); /*///////*/
     background-position: center; /*/ //////*/
     background-size: cover; /*///////*/
   }
