@@ -67,7 +67,7 @@ function completeLoader() {
       "-=.4"
     )
     .to("#loader", {
-      delay: 3,
+      delay: 2.9,
       duration: 1.5,
       opacity: 0,
     })
