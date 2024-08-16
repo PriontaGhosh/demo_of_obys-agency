@@ -1,3 +1,10 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
 @font-face {
   font-family: "Plain Light";
   src: url(/demo/Fonts/plain-light-webfont.ttf);
@@ -780,12 +787,18 @@ h2:nth-child(2) {
 }
 #footer #entry_title {
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   height: 7vw;
   width: 80vw;
   display: flex;
   align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 #entry_title h1 {
@@ -1551,6 +1564,8 @@ h2:nth-child(2) {
     position: relative;
     top: -1.1%;
     font-size: 3.8vw;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
     height: fit-content;
     width: 80%;
     letter-spacing: -0.01vw;
@@ -1676,12 +1691,18 @@ h2:nth-child(2) {
   }
   #footer #entry_title {
     position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
     height: 10vw;
     width: 80vw;
     display: flex;
     align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
     justify-content: space-between;
     margin-bottom: 12vw;
   }
