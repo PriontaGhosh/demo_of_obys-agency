@@ -1,22 +1,19 @@
 function locomotiveAnimation() {
   gsap.registerPlugin(ScrollTrigger);
 
-  // Using Locomotive Scroll from Locomotive https://github.com/locomotivemtl/locomotive-scroll
-
   const locoScroll = new LocomotiveScroll({
     el: document.querySelector("#main"),
     smooth: true,
   });
-  // each time Locomotive Scroll updates, tell ScrollTrigger to update too (sync positioning)
+
   locoScroll.on("scroll", ScrollTrigger.update);
 
-  // tell ScrollTrigger to use these proxy methods for the "#main" element since Locomotive Scroll is hijacking things
   ScrollTrigger.scrollerProxy("#main", {
     scrollTop(value) {
       return arguments.length
         ? locoScroll.scrollTo(value, 0, 0)
         : locoScroll.scroll.instance.scroll.y;
-    }, // we don't have to define a scrollLeft because we're only scrolling vertically.
+    },
     getBoundingClientRect() {
       return {
         top: 0,
@@ -25,28 +22,24 @@ function locomotiveAnimation() {
         height: window.innerHeight,
       };
     },
-    // LocomotiveScroll handles things completely differently on mobile devices - it doesn't even transform the container at all! So to get the correct behavior and avoid jitters, we should pin things with position: fixed on mobile. We sense it by checking to see if there's a transform applied to the container (the LocomotiveScroll-controlled element).
     pinType: document.querySelector("#main").style.transform
       ? "transform"
       : "fixed",
   });
 
-  // each time the window updates, we should refresh ScrollTrigger and then update LocomotiveScroll.
   ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
-
-  // after everything is set up, refresh() ScrollTrigger and update LocomotiveScroll because padding may have been added for pinning, etc.
   ScrollTrigger.refresh();
 }
 
 function completeLoader() {
-  let tl = gsap.timeline();
+  const tl = gsap.timeline();
+  const h5 = document.querySelector("#time_count h5");
+  let count = 5;
 
   tl.from("#time_count", {
     opacity: 0,
-    onStart: function () {
-      let h5 = document.querySelector("#time_count h5");
-      let count = 6;
-      let count_update = setInterval(function () {
+    onStart() {
+      const count_update = setInterval(() => {
         if (count < 100) {
           h5.innerHTML = count++;
         } else {
@@ -63,8 +56,8 @@ function completeLoader() {
     delay: 0.25,
     stagger: 0.33,
     opacity: 0,
-  }),
-    tl.from(
+  })
+    .from(
       ".line h2",
       {
         y: 100,
@@ -72,22 +65,22 @@ function completeLoader() {
         opacity: 0,
       },
       "-=.4"
-    ),
-    tl.to("#loader", {
-      delay: 2.6,
+    )
+    .to("#loader", {
+      delay: 2.9,
       duration: 1.5,
       opacity: 0,
-    });
-  tl.from("#page1", {
-    y: 1600,
-    duration: 1,
-    opacity: 0,
-    ease: "power4",
-  }),
-    tl.to("#loader", {
+    })
+    .from("#page1", {
+      y: 1600,
+      duration: 1,
+      opacity: 0,
+      ease: "power4",
+    })
+    .to("#loader", {
       display: "none",
-    }),
-    tl.from(
+    })
+    .from(
       ".hero h1, .hero .flow",
       {
         y: 150,
@@ -96,8 +89,8 @@ function completeLoader() {
         opacity: 0,
       },
       "-=1.05"
-    ),
-    tl.from(
+    )
+    .from(
       "#navbar_prt2 a",
       {
         y: 20,
@@ -107,85 +100,83 @@ function completeLoader() {
       "-=.7"
     );
 }
+
 function cursurAnimation() {
   Shery.mouseFollower({
     skew: true,
-    ease: "cubic-bezier(0.23, 1, 0.320, 1)",
+    ease: "cubic-bezier(0.23, 1, 0.32, 1)",
     duration: 1,
   });
   Shery.makeMagnet("#navbar_prt2 a");
 }
+
 function videoContainerAnimation() {
-  let videoContainer = document.querySelector("#video_container");
-  let video = document.querySelector("#video_container video");
-  let vdcrsr = document.querySelector("#video_cursur");
+  const videoContainer = document.querySelector("#video_container");
+  const video = videoContainer.querySelector("video");
+  const vdcrsr = document.querySelector("#video_cursur");
   let flag = 0;
-  videoContainer.addEventListener("click", function () {
-    if (flag == 0) {
+
+  videoContainer.addEventListener("click", () => {
+    if (flag === 0) {
       video.play();
       video.style.opacity = 1;
       vdcrsr.innerHTML = `<i class="ri-pause-mini-fill"></i>`;
-      gsap.to("#video_cursur", {
-        scale: 0.5,
-      });
+      gsap.to("#video_cursur", { scale: 0.5 });
       flag = 1;
     } else {
       video.pause();
       video.style.opacity = 0;
       vdcrsr.innerHTML = `<i class="ri-play-mini-fill"></i>`;
-      gsap.to("#video_cursur", {
-        scale: 1,
-      });
+      gsap.to("#video_cursur", { scale: 1 });
       flag = 0;
     }
   });
-  videoContainer.addEventListener("mouseenter", function () {
-    videoContainer.addEventListener("mousemove", function (detls) {
-      gsap.to(".mousefollower", {
-        opacity: 0,
-        // ////////////
-      });
-      gsap.to("#video_cursur", {
-        top: detls.y - 250,
-        left: detls.x - 350,
-      });
+
+  const updateCursorPosition = (detls) => {
+    gsap.to("#video_cursur", {
+      top: detls.y - 250,
+      left: detls.x - 350,
     });
+  };
+
+  videoContainer.addEventListener("mouseenter", () => {
+    videoContainer.addEventListener("mousemove", updateCursorPosition);
+    gsap.to(".mousefollower", { opacity: 0 });
   });
-  videoContainer.addEventListener("mouseleave", function () {
-    gsap.to(".mousefollower", {
-      opacity: 1,
-    });
+
+  videoContainer.addEventListener("mouseleave", () => {
+    videoContainer.removeEventListener("mousemove", updateCursorPosition);
+    gsap.to(".mousefollower", { opacity: 1 });
     gsap.to("#video_cursur", {
       top: "-10vh",
       left: "70%",
     });
   });
 }
-function flagAniamtion() {
-  let bd = document.querySelector("body");
-  let flow = document.querySelector(".hero .flow");
-  let flag = document.querySelector("#flag");
 
-  bd.addEventListener("mousemove", function (detls) {
-    gsap.to("#flag", {
+function flagAnimation() {
+  const bd = document.querySelector("body");
+  const flow = document.querySelector(".hero .flow");
+  const flag = document.querySelector("#flag");
+
+  bd.addEventListener("mousemove", (detls) => {
+    gsap.to(flag, {
       x: detls.clientX,
       y: detls.clientY,
     });
   });
-  flow.addEventListener("mouseenter", function () {
-    gsap.to("#flag", {
-      opacity: 1,
-    });
+
+  flow.addEventListener("mouseenter", () => {
+    gsap.to(flag, { opacity: 1 });
   });
-  flow.addEventListener("mouseleave", function () {
-    /* //////// */
-    gsap.to("#flag", {
-      opacity: 0,
-    });
+
+  flow.addEventListener("mouseleave", () => {
+    gsap.to(flag, { opacity: 0 });
   });
 }
-function page4_image_effect() {
-  Shery.imageEffect(".imgdiv", {
+
+function page3ImageEffect() {
+  Shery.imageEffect(".img_txt .imgdiv", {
     style: 2,
     config: {
       resolutionXY: { value: 100 },
@@ -231,16 +222,17 @@ function page4_image_effect() {
       metaball: { value: 0.53, range: [0, 2] },
       discard_threshold: { value: 0.5, range: [0, 1] },
       antialias_threshold: { value: 0, range: [0, 0.1] },
-      noise_height: { value: 0.4, range: [0, 2] },
-      noise_scale: { value: 7.63, range: [0, 100] },
+      noise_height: { value: 0.4, range: [0, 5] },
+      noise_range: { value: 0.3, range: [0, 1] },
+      speed_dir: { value: 1 },
     },
-    gooey: true,
   });
 }
 
+// Execute all functions
 locomotiveAnimation();
 completeLoader();
 cursurAnimation();
-flagAniamtion();
 videoContainerAnimation();
-page4_image_effect();
+flagAnimation();
+page3ImageEffect();
